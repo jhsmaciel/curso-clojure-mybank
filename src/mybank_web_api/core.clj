@@ -26,9 +26,18 @@
 (defn test-post [server verb url body]
   (test-http/response-for (::http/service-fn @server) verb url :body body))
 
+(defn reset-server
+  []
+  (try
+    (http/stop @server)
+    (catch Exception _)
+    (finally start)))
+
 (comment
-  (start)
-  (http/stop @server)
+
+  (reset-server)
+  ;; (start)
+  ;; (http/stop @server)
 
   (test-request server :get "/saldo/1")
   (test-request server :get "/saldo/2")
