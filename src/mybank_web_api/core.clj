@@ -1,7 +1,6 @@
 (ns mybank-web-api.core
   (:require
    [io.pedestal.http :as http]
-   [io.pedestal.test :as test-http]
    [mybank-web-api.routes :refer [routes]])
   (:gen-class))
 
@@ -21,17 +20,13 @@
 (defn start []
   (reset! server (http/start (create-server))))
 
-(defn test-request [server verb url]
-  (test-http/response-for (::http/service-fn @server) verb url))
-(defn test-post [server verb url body]
-  (test-http/response-for (::http/service-fn @server) verb url :body body))
-
 (defn reset-server
   []
   (try
     (http/stop @server)
     (catch Exception _)
     (finally start)))
+
 
 (comment
 
