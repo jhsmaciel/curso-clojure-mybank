@@ -3,8 +3,6 @@
 
 (defn add-content-type-header
   [context]
-  (println "--------------------------------------------------")
-  (println context)
   (assoc-in context [:response :headers "Content-Type"] "text/plain"))
 
 (def content-type-header-interceptor

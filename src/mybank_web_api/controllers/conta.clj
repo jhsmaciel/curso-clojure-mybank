@@ -1,21 +1,19 @@
-(ns mybank-web-api.controllers.conta)
+(ns mybank-web-api.controllers.conta
+  (:require [mybank-web-api.logics.conta :as m.logics.conta]))
 
 (defn get-saldo [request]
   (let [contas (-> request :contas)
-        id-conta (-> request :path-params :id keyword)
-        conta (id-conta @contas)]
-    {:status 200
-     :body (id-conta @contas "conta inválida!")}))
+        id-conta (-> request :path-params :id keyword)]
+    (m.logics.conta/get-conta @contas id-conta)))
 
-(defn make-deposit [request]
+(defn deposito! [request]
   (let [contas (-> request :contas)
         id-conta (-> request :path-params :id keyword)
-        conta (id-conta @contas)
         valor-deposito (-> request :body slurp parse-double)]
-    (if conta
-      (do
-        (swap! contas (fn [m] (update-in m [id-conta :saldo] #(+ % valor-deposito))))
-        {:status 200
-         :body {:id-conta   id-conta
-                :novo-saldo (id-conta @contas)}})
-      (throw (ex-info "Conta não localiza." { :type ::conta-nao-encontrada })))))
+    (swap! contas m.logics.conta/atualiza-saldo-conta id-conta valor-deposito +)))
+
+(defn saque! [request]
+  (let [contas (-> request :contas)
+        id-conta (-> request :path-params :id keyword)
+        valor-saque (-> request :body slurp parse-double)]
+    (swap! contas m.logics.conta/atualiza-saldo-conta id-conta valor-saque -)))
