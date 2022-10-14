@@ -1,49 +1,49 @@
 (ns mybank-web-api.routes
   (:require
    [io.pedestal.http.route :as route]
-   [mybank-web-api.controllers.conta :as m.controllers.conta]
-   [mybank-web-api.interceptors.conta :as m.interceptors.conta]
-   [mybank-web-api.interceptors.error :as m.interceptors.error]
-   [mybank-web-api.interceptors.header :as m.interceptors.header]))
+   [mybank-web-api.controller.account :as m.controller.account]
+   [mybank-web-api.interceptor.account :as m.interceptor.account]
+   [mybank-web-api.interceptor.error :as m.interceptor.error]
+   [mybank-web-api.interceptor.header :as m.interceptor.header]))
 
-(defn fazer-deposito
+(defn make-deposit
   [request]
-  (m.controllers.conta/deposito! request)
+  (m.controller.account/deposit! request)
   {:status 200
-   :body (m.controllers.conta/get-saldo request)})
+   :body (m.controller.account/get-balance request)})
 
-(defn fazer-saque
+(defn make-withdraw
   [request]
-  (m.controllers.conta/saque! request)
+  (m.controller.account/withdraw! request)
   {:status 200
-   :body (m.controllers.conta/get-saldo request)})
+   :body (m.controller.account/get-balance request)})
 
-(defn buscar-saldo
+(defn get-balance
   [request]
   {:status 200
-   :body (m.controllers.conta/get-saldo request)})
+   :body (m.controller.account/get-balance request)})
 
 
 (def routes
   (route/expand-routes
    #{["/saldo/:id"
       :get
-      [m.interceptors.conta/contas-interceptor
-       m.interceptors.error/error-interceptor
-       m.interceptors.header/content-type-header-interceptor
-       buscar-saldo]
-      :route-name ::saldo]
+      [m.interceptor.account/accounts-interceptor
+       m.interceptor.error/error-interceptor
+       m.interceptor.header/content-type-header-interceptor
+       get-balance]
+      :route-name ::balance]
      ["/deposito/:id"
       :post
-      [m.interceptors.conta/contas-interceptor
-       m.interceptors.error/error-interceptor
-       m.interceptors.header/content-type-header-interceptor
-       fazer-deposito]
-      :route-name ::deposito]
+      [m.interceptor.account/accounts-interceptor
+       m.interceptor.error/error-interceptor
+       m.interceptor.header/content-type-header-interceptor
+       make-deposit]
+      :route-name ::deposit]
      ["/saque/:id"
       :post
-      [m.interceptors.conta/contas-interceptor
-       m.interceptors.error/error-interceptor
-       m.interceptors.header/content-type-header-interceptor
-       fazer-saque]
-      :route-name ::saque]}))
+      [m.interceptor.account/accounts-interceptor
+       m.interceptor.error/error-interceptor
+       m.interceptor.header/content-type-header-interceptor
+       make-withdraw]
+      :route-name ::withdraw]}))

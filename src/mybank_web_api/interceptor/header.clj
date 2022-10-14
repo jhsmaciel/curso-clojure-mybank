@@ -1,4 +1,4 @@
-(ns mybank-web-api.interceptors.header
+(ns mybank-web-api.interceptor.header
   (:require [io.pedestal.interceptor :as i]))
 
 (defn add-content-type-header

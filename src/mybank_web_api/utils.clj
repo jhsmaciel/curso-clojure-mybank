@@ -1,4 +1,4 @@
-(ns test.mybank-web-api.utils
+(ns mybank-web-api.utils
   (:require [io.pedestal.test :as test-http]
             [io.pedestal.http :as http]))
 
