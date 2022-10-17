@@ -6,4 +6,4 @@
 
 - [X] Adicionar casos de testes para saque. (Não pode ter saldo negativo)
    
-- [ ] Implementar pelo menos 2 melhorias nos endpoints a partir de casos de teste imaginados que falham.
+- [ ] Implementar pelo menos 2 melhorias nos endpoints a partir de casos de teste imaginados que falham. (Operação com valor negativo e adicionar camada de json pela entrada)
