@@ -19,4 +19,4 @@
   (let [account (get-account accounts account-id)]
     (if (>= (:saldo account) value)
       true
-      (throw (ex-info "Account don't has balance." { :type ::account-without-balance})))))
+      (throw (ex-info "Account don't has suficient balance." { :type ::account-without-balance})))))

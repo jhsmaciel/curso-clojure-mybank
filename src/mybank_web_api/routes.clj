@@ -1,6 +1,7 @@
 (ns mybank-web-api.routes
   (:require
    [io.pedestal.http.route :as route]
+   [io.pedestal.http.body-params :as body-params]
    [mybank-web-api.controller.account :as m.controller.account]
    [mybank-web-api.interceptor.account :as m.interceptor.account]
    [mybank-web-api.interceptor.error :as m.interceptor.error]
@@ -30,20 +31,25 @@
       :get
       [m.interceptor.account/accounts-interceptor
        m.interceptor.error/error-interceptor
-       m.interceptor.header/content-type-header-interceptor
+       m.interceptor.header/coerce-body-interceptor
+       m.interceptor.header/supported-types-interceptor
        get-balance]
       :route-name ::balance]
      ["/deposito/:id"
       :post
-      [m.interceptor.account/accounts-interceptor
+      [(body-params/body-params)
+       m.interceptor.account/accounts-interceptor
        m.interceptor.error/error-interceptor
-       m.interceptor.header/content-type-header-interceptor
+       m.interceptor.header/coerce-body-interceptor
+       m.interceptor.header/supported-types-interceptor
        make-deposit]
       :route-name ::deposit]
      ["/saque/:id"
       :post
-      [m.interceptor.account/accounts-interceptor
+      [(body-params/body-params)
+       m.interceptor.account/accounts-interceptor
        m.interceptor.error/error-interceptor
-       m.interceptor.header/content-type-header-interceptor
+       m.interceptor.header/coerce-body-interceptor
+       m.interceptor.header/supported-types-interceptor
        make-withdraw]
       :route-name ::withdraw]}))

@@ -1,10 +1,38 @@
 (ns mybank-web-api.interceptor.header
-  (:require [io.pedestal.interceptor :as i]))
+  (:require
+   [clojure.data.json :as json]
+   [io.pedestal.http.content-negotiation :as conneg]
+   [io.pedestal.interceptor :as i]))
 
-(defn add-content-type-header
+(def supported-types ["text/html" "application/edn" "application/json" "text/plain"])
+
+(def supported-types-interceptor (conneg/negotiate-content supported-types))
+
+
+(defn accepted-type
   [context]
-  (assoc-in context [:response :headers "Content-Type"] "text/plain"))
+  (get-in context [:request :accept :field] "text/plain"))
 
-(def content-type-header-interceptor
-  (i/interceptor {:name ::content-type-header
-                  :leave add-content-type-header}))
+(defn transform-content
+  [body content-type]
+  (case content-type
+    "text/html"        body
+    "text/plain"       body
+    "application/edn"  (pr-str body)
+    "application/json" (json/write-str body)))
+
+(defn coerce-to
+  [response content-type]
+  (-> response
+      (update :body transform-content content-type)
+      (assoc-in [:headers "Content-Type"] content-type)))
+
+(defn coerce-body
+  [context]
+  (if (get-in context [:response :headers "Content-Type"])
+    context
+    (update-in context [:response] coerce-to (accepted-type context))))
+
+(def coerce-body-interceptor
+  (i/interceptor {:name ::coerce-body
+                  :leave coerce-body}))
