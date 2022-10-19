@@ -10,7 +10,9 @@
                  [org.slf4j/slf4j-simple "1.7.28"]
                  [clj-http "3.12.1"]
                  [org.clojure/data.json "2.4.0"]
-                 [prismatic/schema "1.4.1"]]
+                 [prismatic/schema "1.4.1"]
+                 [com.stuartsierra/component "1.0.0"]
+                 [walmartlabs/system-viz "0.4.0"]]
   :main ^:skip-aot mybank-web-api.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot      :all

@@ -1,10 +1,11 @@
 (ns mybank-web-api.core
   (:require
+   [mybank-web-api.components :as m.components]
+   [mybank-web-api.interceptor.debug :as m.interceptor.debug]
    [mybank-web-api.server :as m.server]
-   [mybank-web-api.utils :as m.utils]
-   [mybank-web-api.interceptor.debug :as m.interceptor.debug]))
+   [mybank-web-api.utils :as m.utils]))
 
-(m.server/reset-server)
+(m.components/main)
 
 (m.interceptor.debug/toggle-debug!)
 

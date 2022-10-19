@@ -1,5 +1,6 @@
 (ns mybank-web-api.routes
   (:require
+   [com.stuartsierra.component :as component]
    [io.pedestal.http.body-params :as body-params]
    [io.pedestal.http.route :as route]
    [mybank-web-api.controller.account :as m.controller.account]
@@ -24,7 +25,6 @@
   [request]
   {:status 200
    :body (m.controller.account/get-balance request)})
-
 
 (def routes
   (route/expand-routes
@@ -57,3 +57,15 @@
        m.interceptor.debug/debug-print-interceptor
        make-withdraw]
       :route-name ::withdraw]}))
+
+(defrecord Routes []
+  component/Lifecycle
+
+  (start [this]
+    (assoc this :routes routes))
+
+  (stop [this]
+    (assoc this :routes nil)))
+
+(defn new-routes []
+  (->Routes))
