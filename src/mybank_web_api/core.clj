@@ -1,9 +1,12 @@
 (ns mybank-web-api.core
   (:require
    [mybank-web-api.server :as m.server]
-   [mybank-web-api.utils :as m.utils]))
+   [mybank-web-api.utils :as m.utils]
+   [mybank-web-api.interceptor.debug :as m.interceptor.debug]))
 
 (m.server/reset-server)
+
+(m.interceptor.debug/toggle-debug!)
 
 (comment
   (m.utils/test-request m.server/server :get "/saldo/1")
